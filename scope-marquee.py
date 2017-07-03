@@ -25,12 +25,12 @@ class ScopeDisplay(object):
         #                "012345678901234567890",
         #                "012345678901234567890",
         #                "012345678901234567890",
-        self.lines = {1: "There".center(21, " "),
-                      2: "Are".center(21, " "),
-                      3: "No".center(21, " "),
-                      4: "Messages".center(21, " "),
-                      5: "To".center(21, " "),
-                      6: "Display".center(21, " "),
+        self.lines = {1: "",
+                      2: "",
+                      3: "",
+                      4: "",
+                      5: "",
+                      6: "",
         }
 
         self.context = zmq.Context()
@@ -40,10 +40,14 @@ class ScopeDisplay(object):
         self.poller.register(self.zmq_sock, zmq.POLLIN)
     # end __init__
 
-    def update_display(self, scheduler, now):
+    def periodic_update(self, scheduler, now):
         next_time = now + 1
-        scheduler.enterabs(time = next_time, priority = 1, action = lambda: self.update_display(scheduler, next_time), argument = ())
+        scheduler.enterabs(time = next_time, priority = 1, action = lambda: self.periodic_update(scheduler, next_time), argument = ())
 
+        self.update_display()
+    # end periodic_update
+
+    def update_display(self):
         # clear
         self.draw.rectangle((0,0,self.disp.width,self.disp.height), outline=0, fill=0)
 
@@ -55,7 +59,7 @@ class ScopeDisplay(object):
 
         # show image on screen
         self.disp.display()
-    # end do_update_display
+    # end update_display
 
     def line_draw(self, line, y):
         self.draw.text((0,y), line, font=self.font, fill=255)
@@ -66,14 +70,19 @@ class ScopeDisplay(object):
     def wait_for_messages(self, time_amount):
         events = dict(self.poller.poll(time_amount * 1000)) # convert to ms for poll
         if events and (events.get(self.zmq_sock) == zmq.POLLIN):
-            self.handle_message(self.zmq_sock.recv_json(zmq.NOBLOCK))
+            msg = self.zmq_sock.recv_json(zmq.NOBLOCK)
+            while(msg):
+                self.handle_message(msg)
+                try: msg = self.zmq_sock.recv_json(zmq.NOBLOCK)
+                except: msg = None
+            self.update_display()
     # end do_wait_for_messages
 
     def handle_message(self, msg):
         if type(msg) != dict or not msg.has_key("key") or not msg.has_key("value"):
             self.zmq_sock.send_json((False, "Invalid message"))
         else:
-            self.lines[int(msg["key"])] = msg["value"]
+            self.lines[int(msg["key"])] = str(msg["value"])
             self.zmq_sock.send_json(True)
 # end ScopeDisplay
 
@@ -100,7 +109,7 @@ def main():
     scope_display = ScopeDisplay(disp)
 
     s = sched.scheduler(time.time, lambda time_amount: scope_display.wait_for_messages(time_amount))
-    ScopeDisplay.update_display(scope_display, s, time.time())
+    ScopeDisplay.periodic_update(scope_display, s, time.time())
 
     s.run()
 # end main
