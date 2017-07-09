@@ -7,7 +7,7 @@ Type=simple
 User=pi
 Group=pi
 WorkingDirectory=/tmp
-ExecStart=/home/pi/workspace/scope-marquee/scope-marquee.py
+ExecStart=scope-marquee.py
 StandardOutput=syslog
 StandardError=syslog
 
