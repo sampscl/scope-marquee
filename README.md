@@ -10,3 +10,7 @@ Control a SSD1306 OLED display on a Raspberry Pi 2 or 3.
 ## Check it out
 
 ```tell-marquee action set_line row 1 value "Hello, world."```
+
+You must have enabled your Pi's SPI bus and wired the display correctly. The
+raspi-config program can be used to enable SPI, and a great SPI pinout website
+is https://pinout.xyz/pinout/spi.
