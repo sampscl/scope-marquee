@@ -11,6 +11,6 @@ setup(name='scope-marquee',
       url='https://www.python.org/sigs/distutils-sig/',
       packages=['distutils', 'distutils.command'],
       license="MIT",
-      install_requires=["PIL", "zmq", "Adafruit_GPIO", "Adafruit_SSD1306"],
+      requires=["PIL", "zmq", "Adafruit_GPIO", "Adafruit_SSD1306"],
       scripts=['scope-marquee/scope-marquee.py', 'scope-marquee/tell-marquee.py'],
      )
