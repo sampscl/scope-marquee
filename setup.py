@@ -5,7 +5,7 @@ _version = "0.1.0"
 
 setup(name='scope-marquee',
       version=_version,
-      description="Python service and zeromq interface to control an SSD1306-based display on a Raspberry Pi 2/3"
+      description="Python service and zeromq interface to control an SSD1306-based display on a Raspberry Pi 2/3",
       author='Clay Sampson',
       author_email='pdgeek@gmail.com',
       url='https://www.python.org/sigs/distutils-sig/',
