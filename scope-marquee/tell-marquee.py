@@ -9,7 +9,7 @@ import base64
 def main():
     context = zmq.Context()
     zmq_sock = context.socket(zmq.REQ)
-    zmq_sock.connect("tcp://sampson-scope:5556")
+    zmq_sock.connect("tcp://127.0.0.1:5556")
     cmd = sys.argv[1]
     target = sys.argv[2]
     param = {}
