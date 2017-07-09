@@ -32,7 +32,7 @@ class ScopeDisplay(object):
         self.poller = zmq.Poller()
         self.poller.register(self.zmq_sock, zmq.POLLIN)
 
-        self.system_info_enabled = True
+        self.system_info_enabled = False
     # end __init__
 
     def initialize_schedule(self, scheduler, now):
