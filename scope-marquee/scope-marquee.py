@@ -73,7 +73,7 @@ class ScopeDisplay(object):
         """
         if type(msg) != dict or not msg.has_key("action") or not msg.has_key("param"): return (False, "Invalid messsage")
 
-        method = getattr(self, "action_{0}".format(msg["action"]))
+        method = getattr(self, "action_{0}".format(msg["action"]), None)
         if not method: return (False, "Unknown action")
 
         return method(msg["param"])
